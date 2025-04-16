@@ -1,0 +1,252 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn more about Incredibles Removals' professional prepacking and unpacking services in Croydon and beyond.">
+    <title>Incredibles Removals - Prepacking & Unpacking</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        a, button {
+            -webkit-tap-highlight-color: transparent;
+        }
+        a:focus, button:focus {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+        }
+        .mobile-menu {
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .mobile-menu.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const Navbar = () => {
+            const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+            const menuRef = React.useRef(null);
+
+            React.useEffect(() => {
+                const handleOutsideClick = (e) => {
+                    if (isMenuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
+                        setIsMenuOpen(false);
+                    }
+                };
+                const handleEscapeKey = (e) => {
+                    if (e.key === 'Escape' && isMenuOpen) {
+                        setIsMenuOpen(false);
+                    }
+                };
+                document.addEventListener('click', handleOutsideClick);
+                document.addEventListener('keydown', handleEscapeKey);
+                return () => {
+                    document.removeEventListener('click', handleOutsideClick);
+                    document.removeEventListener('keydown', handleEscapeKey);
+                };
+            }, [isMenuOpen]);
+
+            return (
+                <nav ref={menuRef} className="bg-orange-600 text-white p-4 sticky top-0 z-50 shadow-md">
+                    <div className="container mx-auto flex justify-between items-center">
+                        <div className="flex items-center">
+                            <h1 className="text-2xl font-bold">Incredibles Removals</h1>
+                        </div>
+                        <ul className="hidden md:flex space-x-6">
+                            <li><a href="index.html#home" className="hover:text-orange-200 transition-colors">Home</a></li>
+                            <li><a href="index.html#services" className="hover:text-orange-200 transition-colors">Services</a></li>
+                            <li><a href="index.html#about" className="hover:text-orange-200 transition-colors">About</a></li>
+                            <li><a href="index.html#testimonials" className="hover:text-orange-200 transition-colors">Testimonials</a></li>
+                            <li><a href="index.html#contact" className="hover:text-orange-200 transition-colors">Contact</a></li>
+                        </ul>
+                        <button 
+                            className="md:hidden text-white focus:outline-none"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            aria-label="Toggle menu"
+                            aria-expanded={isMenuOpen}
+                        >
+                            <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
+                        </button>
+                    </div>
+                    <div className={`mobile-menu bg-orange-700 md:hidden ${isMenuOpen ? 'open' : ''}`}>
+                        <ul className="flex flex-col space-y-3 p-4">
+                            <li><a href="index.html#home" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+                            <li><a href="index.html#services" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Services</a></li>
+                            <li><a href="index.html#about" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
+                            <li><a href="index.html#testimonials" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Testimonials</a></li>
+                            <li><a href="index.html#contact" className="block py-2 hover:text-orange-200 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            );
+        };
+
+        const ServiceDetail = () => (
+            <section className="py-16 bg-gray-100">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Prepacking & Unpacking</h2>
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                            Our prepacking and unpacking services take the hassle out of moving. We use high-quality materials and proven techniques to ensure your belongings are secure during transit and arrive in perfect condition.
+                        </p>
+                    </div>
+                    <div className="flex flex-col lg:flex-row gap-12">
+                        <div className="lg:w-1/2">
+                            <img 
+                                src="https://static.wixstatic.com/media/ea26fd_de03219395224c97b1b438f18f1295f5~mv2_d_7002_4673_s_4_2.jpeg"
+                                alt="Incredibles Removals - Prepacking & Unpacking"
+                                className="w-full h-auto rounded-lg shadow-xl object-cover"
+                                loading="lazy"
+                            />
+                        </div>
+                        <div className="lg:w-1/2">
+                            <h3 className="text-2xl font-semibold text-gray-900 mb-6">What We Offer</h3>
+                            <ul className="space-y-4">
+                                <li className="flex items-start">
+                                    <i className="fas fa-check-circle text-orange-600 text-xl mr-3 mt-1"></i>
+                                    <span className="text-gray-700">Expert packing with sturdy boxes, bubble wrap, and padding</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <i className="fas fa-check-circle text-orange-600 text-xl mr-3 mt-1"></i>
+                                    <span className="text-gray-700">Labeling and inventory management for easy unpacking</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <i className="fas fa-check-circle text-orange-600 text-xl mr-3 mt-1"></i>
+                                    <span className="text-gray-700">Careful packing of fragile items like glassware and electronics</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <i className="fas fa-check-circle text-orange-600 text-xl mr-3 mt-1"></i>
+                                    <span className="text-gray-700">Unpacking services to set up your new home quickly</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <i className="fas fa-check-circle text-orange-600 text-xl mr-3 mt-1"></i>
+                                    <span className="text-gray-700">Environmentally friendly disposal of packing materials</span>
+                                </li>
+                            </ul>
+                            <div className="mt-8">
+                                <a
+                                    href="index.html#contact"
+                                    className="inline-flex items-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors touch-manipulation"
+                                >
+                                    Get a Free Quote <i className="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Footer = () => (
+            <footer className="bg-gray-900 text-white py-12">
+                <div className="container mx-auto px-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                        <div>
+                            <h3 className="text-xl font-bold mb-4">Incredibles Removals</h3>
+                            <p className="text-gray-400">A reliable moving company providing residential and commercial relocation services. We handle packing, transport, and unpacking with care, plus offer storage and furniture services.</p>
+                            <p className="text-gray-400 mt-2">SIC Code: 49420</p>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+                            <ul className="space-y-2">
+                                <li><a href="index.html#home" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Home</a></li>
+                                <li><a href="index.html#services" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Services</a></li>
+                                <li><a href="index.html#about" className="text-gray-400 hover:text-white transition-colors touch-manipulation">About</a></li>
+                                <li><a href="index.html#testimonials" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Testimonials</a></li>
+                                <li><a href="index.html#contact" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-semibold mb-4">Services</h4>
+                            <ul className="space-y-2">
+                                <li><a href="home-removals.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Home Removals</a></li>
+                                <li><a href="prepacking-unpacking.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Packing Services</a></li>
+                                <li><a href="office-factory-relocation.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Office Relocation</a></li>
+                                <li><a href="country-removals.html" className="text-gray-400 hover:text-white transition-colors touch-manipulation">Long Distance Moves</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-semibold mb-4">Connect With Us</h4>
+                            <div className="flex space-x-4 mb-4">
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" className="text-gray-400 hover:text-white transition-colors text-xl touch-manipulation">
+                                    <i className="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
+                        <p>© {new Date().getFullYear()} Incredibles Removals. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        const App = () => (
+            <div className="font-sans antialiased text-gray-900">
+                <Navbar />
+                <ServiceDetail />
+                <Footer />
+                <a 
+                    href="https://wa.me/447415714344" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all z-40 touch-manipulation"
+                    aria-label="Chat on WhatsApp"
+                >
+                    <i className="fab fa-whatsapp text-3xl"></i>
+                </a>
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
